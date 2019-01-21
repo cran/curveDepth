@@ -618,13 +618,16 @@ NumericVector depthCurveTukey(List objects, List data, int nDirs = 100,
         refEmpDist.n, nFracInt, false));
       // Set not chosen points' weights to zero
       int iInds = 0;
+      // Rcout << "inds.size()=" << inds.size() << std::endl;
       for (int j = 0; j < refEmpDist.n; j++){
-        if(j == inds[iInds] - 1){
+        // Rcout << "iInds=" << iInds << "; ";
+        if(iInds < nFracInt && j == inds[iInds] - 1){
           iInds++;
         }else{
           refEmpDist.weights[j] = 0;
         }
       }
+      // Rcout << std::endl;
 
       /*
       Rcout << "refEmpDist[" << i << "]" << std::endl;

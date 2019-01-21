@@ -1,4 +1,4 @@
-37ae9ec9bb8141315e5124a04351d2d4 *DESCRIPTION
+ab1dd981b913888e7c4be4b09381d501 *DESCRIPTION
 0f31558e3ead8d1810c6dce0644bb6e1 *NAMESPACE
 ff681deefe08f44e434b1ade77fcd7c0 *R/RcppExports.R
 bc1be957522fd446fd1c45f6fb9c6cdd *data/mnistShort017.rda
@@ -12,7 +12,7 @@ cdbb3a35ee4a16b55052ca8b78ffc566 *man/depth.curve.Tukey.Rd
 9f1499db305053b890c9cac14ceb7ec2 *man/sample.curves.Rd
 e500e66ea4076fe6623d53b00175603f *man/voxelize.Rd
 7d6e678a66ac75fda10e23d37cd6b441 *src/RcppExports.cpp
-363544cd33723e82c07c2063cce68a10 *src/depthsCurveHfsp.cpp
+42e2ed15945b7d53f3b502caa0a9f134 *src/depthsCurveHfsp.cpp
 0c3eff96199627dceea65c59686c4f6e *src/hypermatrix.h
 368090aacabc4ab54cbd8f95f84a24f2 *src/routines.cpp
 a447b25acbca3377e580049ac5207394 *src/routines.h
