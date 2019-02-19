@@ -64,9 +64,12 @@
 #'       ylim = c(0 - 1 / 27, 1 + 1 / 27))
 #' plotGridImage(dim(aOneDigit)[1:2])
 #' # Caculate distances between all the images
-#' distMatrix <- dist.images(
-#'   abind(firstSevenDigit, secondSevenDigit, aOneDigit,
-#'         along = 3))
+#' threeDigits <- array(NA, dim = c(nrow(firstSevenDigit),
+#'   ncol(firstSevenDigit), 3))
+#' threeDigits[, , 1] <- firstSevenDigit
+#' threeDigits[, , 2] <- secondSevenDigit
+#' threeDigits[, , 3] <- aOneDigit
+#' distMatrix <- dist.images(threeDigits)
 #' # Print distance matrix
 #' print(distMatrix)
 dist.images <- function(images, verbosity = 0L) {

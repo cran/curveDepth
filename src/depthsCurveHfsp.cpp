@@ -12,6 +12,12 @@
 //
 //  Subsequent changes are listed below:
 //  01.11.2018 (Pavlo Mozharovskyi): First version released.
+//  21.01.2019 (Pavlo Mozharovskyi): Corrected
+//    in function "depthCurveTukey" [[Rcpp::export(depth.curve.Tukey)]]
+//    3.b) Subsample points of the object is necessary:
+//      3.b.i) Subsample "refEmpDist", line 622
+//  19.02.2019 (Pavlo Mozharovskyi): removed abind call from the example
+//    to the function "distImages" [[Rcpp::export(dist.images)]]
 //*--------------------------------------------------------------------------*//
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -81,9 +87,12 @@
 //'       ylim = c(0 - 1 / 27, 1 + 1 / 27))
 //' plotGridImage(dim(aOneDigit)[1:2])
 //' # Caculate distances between all the images
-//' distMatrix <- dist.images(
-//'   abind(firstSevenDigit, secondSevenDigit, aOneDigit,
-//'         along = 3))
+//' threeDigits <- array(NA, dim = c(nrow(firstSevenDigit),
+//'   ncol(firstSevenDigit), 3))
+//' threeDigits[, , 1] <- firstSevenDigit
+//' threeDigits[, , 2] <- secondSevenDigit
+//' threeDigits[, , 3] <- aOneDigit
+//' distMatrix <- dist.images(threeDigits)
 //' # Print distance matrix
 //' print(distMatrix)
 // [[Rcpp::export(dist.images)]]
