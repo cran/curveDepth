@@ -18,6 +18,10 @@
 //      3.b.i) Subsample "refEmpDist", line 622
 //  19.02.2019 (Pavlo Mozharovskyi): removed abind call from the example
 //    to the function "distImages" [[Rcpp::export(dist.images)]]
+//  12.06.2019 (Pavlo Mozharovskyi): added argument "randomPoints" in function
+//    "curvesSubsample".
+//  06.07.2019 (Pavlo Mozharovskyi): added arguments "randObj" and "randDat" in 
+//    function "depthCTukey".
 //*--------------------------------------------------------------------------*//
 
 // [[Rcpp::depends(RcppArmadillo)]]
@@ -788,6 +792,10 @@ NumericVector depthCurveTukey(List objects, List data, int nDirs = 100,
 //' curve. If \code{length(ptsPerCurve) < length(curves)} then the first entry
 //' of \code{ptsPerCurve} is considered only, and corresponds to the number of
 //' points on a curve.
+//' 
+//' @param randomPoints A logical, which indicates whether the points on the 
+//' curves should be drawn from the uniform distribution (on their length) (TRUE, 
+//' default) or as an equidistant (on their length) non-random grid (FALSE).
 //'
 //' @return A list of curves with each entry being a list constiting of [[1]]
 //' the drawn curve being a matrix named \code{coords}, [[2]] length of the
@@ -841,7 +849,7 @@ NumericVector depthCurveTukey(List objects, List data, int nDirs = 100,
 //'        col = "blue", lwd = 2, pch = 3)
 // [[Rcpp::export(sample.curves)]]
 List curvesSubsample(List curves, IntegerVector ptsPerCurve =
-  IntegerVector::create(500)){
+  IntegerVector::create(500), bool randomPoints = true){
   // 0. Check input data
   // TODO: -||-
   // Rcout << ptsPerCurve << "\n";
@@ -887,12 +895,19 @@ List curvesSubsample(List curves, IntegerVector ptsPerCurve =
   double* cumCurLengths = new double[maxNCurvePoints];
   for (int i = 0; i < curves.length(); i++){ // for each input
     // 1.3.1. Draw and sort the points
-    Environment stats_env("package:stats");
-    Environment base_env("package:base");
-    Function stats_runif = stats_env["runif"];
-    Function base_sort = base_env["sort"];
-    NumericVector rcppPoints =
-      base_sort(stats_runif(nsPoints[i], 0, lengths[i]));
+    NumericVector rcppPoints(nsPoints[i]);
+    if (randomPoints){
+      Environment stats_env("package:stats");
+      Environment base_env("package:base");
+      Function stats_runif = stats_env["runif"];
+      Function base_sort = base_env["sort"];
+      rcppPoints = base_sort(stats_runif(nsPoints[i], 0, lengths[i]));
+    }else{
+      rcppPoints(0) = 0;
+      for (int j = 1; j < nsPoints[i]; j++){
+        rcppPoints(j) = lengths[i] / (nsPoints[i] - 1) * j;
+      }
+    }
     // 1.3.2. Extract the curve's points
     NumericMatrix rcppCurveVals = as<List>(curves(i))["coords"];
     int n = rcppCurveVals.nrow();
@@ -1076,6 +1091,14 @@ List images2curves(arma::cube images){
 //'
 //' @param minMassDat minimal portion of the \code{data} distribution in the
 //' halfspace to be considered when calculating depth.
+//' 
+//' @param randObj Whether to draw points from \code{objects} uniformly 
+//' randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+//' place them on an equispaced (again on the length) grid (\code{FALSE}).
+//' 
+//' @param randDat Whether to draw points from \code{data} uniformly 
+//' randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+//' place them on an equispaced (again on the length) grid (\code{FALSE}).
 //'
 //' @return A vector of doubles having the same length as \code{objects}, whose
 //' each entry is the depth of each element of \code{objects} w.r.t.
@@ -1132,11 +1155,12 @@ List images2curves(arma::cube images){
 NumericVector depthCTukey(List objects, List data, int nDirs = 100,
                           bool subs = true, int m = 500,
                           double fracInt = 0.5, double fracEst = 0.5,
-                          bool exactEst = true,
-                          double minMassObj = 0, double minMassDat = 0){
+                          bool exactEst = true, 
+                          double minMassObj = 0, double minMassDat = 0,
+                          bool randObj = true, bool randDat = true){
   List tmpObj = curvesSubsample(objects, IntegerVector(1, m / fracEst *
-    (fracInt + fracEst)));
-  List tmpDat = curvesSubsample(data, IntegerVector(1, m));
+    (fracInt + fracEst)), randObj);
+  List tmpDat = curvesSubsample(data, IntegerVector(1, m), randDat);
   return depthCurveTukey(tmpObj, tmpDat, nDirs, subs, fracInt, fracEst,
-                         exactEst, minMassObj, minMassDat);
+                         R_NilValue, exactEst, minMassObj, minMassDat);
 }

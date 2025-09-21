@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // distImages
 NumericMatrix distImages(arma::cube images, int verbosity);
 RcppExport SEXP _curveDepth_distImages(SEXP imagesSEXP, SEXP verbositySEXP) {
@@ -66,14 +71,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // curvesSubsample
-List curvesSubsample(List curves, IntegerVector ptsPerCurve);
-RcppExport SEXP _curveDepth_curvesSubsample(SEXP curvesSEXP, SEXP ptsPerCurveSEXP) {
+List curvesSubsample(List curves, IntegerVector ptsPerCurve, bool randomPoints);
+RcppExport SEXP _curveDepth_curvesSubsample(SEXP curvesSEXP, SEXP ptsPerCurveSEXP, SEXP randomPointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type curves(curvesSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type ptsPerCurve(ptsPerCurveSEXP);
-    rcpp_result_gen = Rcpp::wrap(curvesSubsample(curves, ptsPerCurve));
+    Rcpp::traits::input_parameter< bool >::type randomPoints(randomPointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(curvesSubsample(curves, ptsPerCurve, randomPoints));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -89,8 +95,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // depthCTukey
-NumericVector depthCTukey(List objects, List data, int nDirs, bool subs, int m, double fracInt, double fracEst, bool exactEst, double minMassObj, double minMassDat);
-RcppExport SEXP _curveDepth_depthCTukey(SEXP objectsSEXP, SEXP dataSEXP, SEXP nDirsSEXP, SEXP subsSEXP, SEXP mSEXP, SEXP fracIntSEXP, SEXP fracEstSEXP, SEXP exactEstSEXP, SEXP minMassObjSEXP, SEXP minMassDatSEXP) {
+NumericVector depthCTukey(List objects, List data, int nDirs, bool subs, int m, double fracInt, double fracEst, bool exactEst, double minMassObj, double minMassDat, bool randObj, bool randDat);
+RcppExport SEXP _curveDepth_depthCTukey(SEXP objectsSEXP, SEXP dataSEXP, SEXP nDirsSEXP, SEXP subsSEXP, SEXP mSEXP, SEXP fracIntSEXP, SEXP fracEstSEXP, SEXP exactEstSEXP, SEXP minMassObjSEXP, SEXP minMassDatSEXP, SEXP randObjSEXP, SEXP randDatSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -104,7 +110,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type exactEst(exactEstSEXP);
     Rcpp::traits::input_parameter< double >::type minMassObj(minMassObjSEXP);
     Rcpp::traits::input_parameter< double >::type minMassDat(minMassDatSEXP);
-    rcpp_result_gen = Rcpp::wrap(depthCTukey(objects, data, nDirs, subs, m, fracInt, fracEst, exactEst, minMassObj, minMassDat));
+    Rcpp::traits::input_parameter< bool >::type randObj(randObjSEXP);
+    Rcpp::traits::input_parameter< bool >::type randDat(randDatSEXP);
+    rcpp_result_gen = Rcpp::wrap(depthCTukey(objects, data, nDirs, subs, m, fracInt, fracEst, exactEst, minMassObj, minMassDat, randObj, randDat));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -128,9 +136,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_curveDepth_distCurves", (DL_FUNC) &_curveDepth_distCurves, 3},
     {"_curveDepth_distCurvesAsymm", (DL_FUNC) &_curveDepth_distCurvesAsymm, 4},
     {"_curveDepth_depthCurveTukey", (DL_FUNC) &_curveDepth_depthCurveTukey, 10},
-    {"_curveDepth_curvesSubsample", (DL_FUNC) &_curveDepth_curvesSubsample, 2},
+    {"_curveDepth_curvesSubsample", (DL_FUNC) &_curveDepth_curvesSubsample, 3},
     {"_curveDepth_images2curves", (DL_FUNC) &_curveDepth_images2curves, 1},
-    {"_curveDepth_depthCTukey", (DL_FUNC) &_curveDepth_depthCTukey, 10},
+    {"_curveDepth_depthCTukey", (DL_FUNC) &_curveDepth_depthCTukey, 12},
     {"_curveDepth_voxelize", (DL_FUNC) &_curveDepth_voxelize, 4},
     {NULL, NULL, 0}
 };

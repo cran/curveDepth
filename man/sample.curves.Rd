@@ -4,7 +4,7 @@
 \alias{sample.curves}
 \title{Sample points on curves}
 \usage{
-sample.curves(curves, ptsPerCurve = as.integer(c(500)))
+sample.curves(curves, ptsPerCurve = as.integer(c(500)), randomPoints = TRUE)
 }
 \arguments{
 \item{curves}{A list where each element is a function being a list
@@ -14,6 +14,10 @@ containing a matrix \code{coords} (curves' values, d columns).}
 curve. If \code{length(ptsPerCurve) < length(curves)} then the first entry
 of \code{ptsPerCurve} is considered only, and corresponds to the number of
 points on a curve.}
+
+\item{randomPoints}{A logical, which indicates whether the points on the 
+curves should be drawn from the uniform distribution (on their length) (TRUE, 
+default) or as an equidistant (on their length) non-random grid (FALSE).}
 }
 \value{
 A list of curves with each entry being a list constiting of [[1]]

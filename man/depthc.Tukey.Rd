@@ -4,9 +4,20 @@
 \alias{depthc.Tukey}
 \title{Calculate Tukey curve depth for curves}
 \usage{
-depthc.Tukey(objects, data, nDirs = 100L, subs = TRUE, m = 500L,
-  fracInt = 0.5, fracEst = 0.5, exactEst = TRUE, minMassObj = 0,
-  minMassDat = 0)
+depthc.Tukey(
+  objects,
+  data,
+  nDirs = 100L,
+  subs = TRUE,
+  m = 500L,
+  fracInt = 0.5,
+  fracEst = 0.5,
+  exactEst = TRUE,
+  minMassObj = 0,
+  minMassDat = 0,
+  randObj = TRUE,
+  randDat = TRUE
+)
 }
 \arguments{
 \item{objects}{A list where each element is a multivariate curve being a
@@ -37,6 +48,14 @@ halfspace to be considered when calculating depth.}
 
 \item{minMassDat}{minimal portion of the \code{data} distribution in the
 halfspace to be considered when calculating depth.}
+
+\item{randObj}{Whether to draw points from \code{objects} uniformly 
+randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+place them on an equispaced (again on the length) grid (\code{FALSE}).}
+
+\item{randDat}{Whether to draw points from \code{data} uniformly 
+randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+place them on an equispaced (again on the length) grid (\code{FALSE}).}
 }
 \value{
 A vector of doubles having the same length as \code{objects}, whose

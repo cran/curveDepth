@@ -355,6 +355,10 @@ depth.curve.Tukey <- function(objects, data, nDirs = 100L, subs = TRUE, fracInt 
 #' curve. If \code{length(ptsPerCurve) < length(curves)} then the first entry
 #' of \code{ptsPerCurve} is considered only, and corresponds to the number of
 #' points on a curve.
+#' 
+#' @param randomPoints A logical, which indicates whether the points on the 
+#' curves should be drawn from the uniform distribution (on their length) (TRUE, 
+#' default) or as an equidistant (on their length) non-random grid (FALSE).
 #'
 #' @return A list of curves with each entry being a list constiting of [[1]]
 #' the drawn curve being a matrix named \code{coords}, [[2]] length of the
@@ -406,8 +410,8 @@ depth.curve.Tukey <- function(objects, data, nDirs = 100L, subs = TRUE, fracInt 
 #'        col = "red", lwd = 2, pch = 1)
 #' points(depthSpace[(n + 1):(2 * n), ],
 #'        col = "blue", lwd = 2, pch = 3)
-sample.curves <- function(curves, ptsPerCurve = as.integer( c(500))) {
-    .Call('_curveDepth_curvesSubsample', PACKAGE = 'curveDepth', curves, ptsPerCurve)
+sample.curves <- function(curves, ptsPerCurve = as.integer( c(500)), randomPoints = TRUE) {
+    .Call('_curveDepth_curvesSubsample', PACKAGE = 'curveDepth', curves, ptsPerCurve, randomPoints)
 }
 
 #' Convert images to curves
@@ -518,6 +522,14 @@ images2curves <- function(images) {
 #'
 #' @param minMassDat minimal portion of the \code{data} distribution in the
 #' halfspace to be considered when calculating depth.
+#' 
+#' @param randObj Whether to draw points from \code{objects} uniformly 
+#' randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+#' place them on an equispaced (again on the length) grid (\code{FALSE}).
+#' 
+#' @param randDat Whether to draw points from \code{data} uniformly 
+#' randomly (\code{TRUE}, by default) on the length jof the curve(s) or to 
+#' place them on an equispaced (again on the length) grid (\code{FALSE}).
 #'
 #' @return A vector of doubles having the same length as \code{objects}, whose
 #' each entry is the depth of each element of \code{objects} w.r.t.
@@ -570,8 +582,8 @@ images2curves <- function(images) {
 #'        col = "red", lwd = 2, pch = 1)
 #' points(depthSpace[(n + 1):(2 * n), ],
 #'        col = "blue", lwd = 2, pch = 3)
-depthc.Tukey <- function(objects, data, nDirs = 100L, subs = TRUE, m = 500L, fracInt = 0.5, fracEst = 0.5, exactEst = TRUE, minMassObj = 0, minMassDat = 0) {
-    .Call('_curveDepth_depthCTukey', PACKAGE = 'curveDepth', objects, data, nDirs, subs, m, fracInt, fracEst, exactEst, minMassObj, minMassDat)
+depthc.Tukey <- function(objects, data, nDirs = 100L, subs = TRUE, m = 500L, fracInt = 0.5, fracEst = 0.5, exactEst = TRUE, minMassObj = 0, minMassDat = 0, randObj = TRUE, randDat = TRUE) {
+    .Call('_curveDepth_depthCTukey', PACKAGE = 'curveDepth', objects, data, nDirs, subs, m, fracInt, fracEst, exactEst, minMassObj, minMassDat, randObj, randDat)
 }
 
 #' Voxelization of functions

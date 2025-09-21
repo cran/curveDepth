@@ -4,9 +4,18 @@
 \alias{depth.curve.Tukey}
 \title{Calculate Tukey curve depth using given points}
 \usage{
-depth.curve.Tukey(objects, data, nDirs = 100L, subs = TRUE, fracInt = 0.5,
-  fracEst = 0.5, subsamples = NULL, exactEst = TRUE, minMassObj = 0,
-  minMassDat = 0)
+depth.curve.Tukey(
+  objects,
+  data,
+  nDirs = 100L,
+  subs = TRUE,
+  fracInt = 0.5,
+  fracEst = 0.5,
+  subsamples = NULL,
+  exactEst = TRUE,
+  minMassObj = 0,
+  minMassDat = 0
+)
 }
 \arguments{
 \item{objects}{A list where each element is a multivariate curve being a
